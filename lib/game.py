@@ -1,5 +1,5 @@
 from __init__ import CURSOR, CONN
-import ipdb
+
 
 class Game:
     def __init__(self, title, developer, id = None, genre_id = None):

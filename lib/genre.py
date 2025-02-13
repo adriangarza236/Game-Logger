@@ -76,6 +76,8 @@ class Genre:
         CONN.commit()
 
     def delete(self):
+        for game in self.games:
+            game.delete()
         sql = '''
             DELETE FROM genres
             WHERE id = ?

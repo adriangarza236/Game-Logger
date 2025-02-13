@@ -35,7 +35,9 @@ class Cli:
         space()
         print("5. Delete Game")
         space()
-        print("6. Exit")
+        print("6. Delete Genre")
+        space()
+        print("7. Exit")
         space()
         self.menu_choice()
 
@@ -66,6 +68,10 @@ class Cli:
             pause()
             self.menu()
         elif user_input == "6":
+            self.delete_genre()
+            space()
+            pause()
+        elif user_input == "7":
             clear()
             space()
             print("++++++++++++++++")
@@ -112,17 +118,17 @@ class Cli:
         print("+++++++++++++++++")
         print("+++  GENRES  ++++")
         print("+++++++++++++++++")
-        if Genre.all():
-            for genre in Genre.all():
+        genres = Genre.all()
+        if genres:
+            for genre in genres:
                 self.genre_list(game, genre)
-            self.genre_choice(genre, game)
+            self.genre_choice(genres, game)
         else: 
             space()
             print("No Genres have been created.")
             space()
             pause()
             self.create_genre(game)
-
 
     def genre_list(self, game, genre):
         space()
@@ -133,19 +139,24 @@ class Cli:
         space()
         
 
-    def genre_choice(self, genre, game):
+    def genre_choice(self, genres, game):
         old_genre = input("Enter 0 to Create Genre or Enter Existing Genre: ")
         if old_genre == "0":
             self.create_genre(game)
-        elif old_genre: 
-            old_genre.lower() == genre.name
-            game.genre = genre
-            clear()
-            space()
-            print(f"+++++ Game: {game.title} +++ Devloper: {game.developer} +++ Genre: {game.genre.name} +++++")
-            print("+++++++++++++++++++++++++   SUCESSFULLY LOOGGED   +++++++++++++++++++++++++++++++")
-            space()
-            pause()
+        elif old_genre:
+            for genre in genres:
+                if old_genre.lower() == genre.name:
+                    game.genre = genre
+                    clear()
+                    space()
+                    print(f"+++++ Game: {game.title} +++ Developer: {game.developer} +++ Genre: {game.genre.name} +++++")
+                    print("+++++++++++++++++++++++++   SUCCESSFULLY LOGGED   +++++++++++++++++++++++++++++++")
+                    space()
+                    pause()
+                    self.menu()
+                    return
+            invalid_choice()
+            game.delete()
             self.menu()
         else: 
             invalid_choice()
@@ -165,7 +176,7 @@ class Cli:
         game.genre = genre
         clear()
         space()
-        print(f"+++++ Game: {game.title} +++ Devloper: {game.developer} +++ Genre: {game.genre.name} +++++")
+        print(f"+++++ Game: {game.title} +++ Developer: {game.developer} +++ Genre: {game.genre.name} +++++")
         print("+++++++++++++++++++++++++   SUCESSFULLY LOOGGED   +++++++++++++++++++++++++++++++")
         space()
         pause()
@@ -174,7 +185,7 @@ class Cli:
     def show_games(self):
         clear()
         space()
-        if Genre.all():
+        if Game.all():
             space()
             print("++++++++++++++++++")
             print("++ GAMES LOGGED ++")
@@ -189,6 +200,7 @@ class Cli:
         print(":::::::::::::::::::::::")
         print(f'Title: {game.title}')
         print(f'Developer: {game.developer}')
+        print(f'Genre id: {game.genre_id}')
         print(f'Genre: {game.genre.name}')
         print(":::::::::::::::::::::::")
         space()
@@ -286,8 +298,33 @@ class Cli:
             pause()
             self.menu()
 
-        
-        
+    def delete_genre(self):
+        clear()
+        space()
+        print("+++++++++++++++++++++")
+        print("++++ DELETE GENRE +++")
+        print("+++++++++++++++++++++")
+        space()
+        name = input("Enter Genre: ")
+        genre = Genre.find_by_name(name)
+        if genre:
+            genre.delete()
+            clear()
+            space()
+            print(f"Genre: {genre.name} has been deleted")
+            space()
+            pause()
+            self.menu()
+        else:
+            clear()
+            space()
+            print("Genre not found")
+            space()
+            pause()
+            self.menu()
 
 
-        
+
+
+
+
